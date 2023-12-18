@@ -5,10 +5,12 @@ import { passengerController } from "../controllers/passenger.controller.js";
 
 const passengersRouter = Router();
 
-passengersRouter.post(
-  "/passengers",
-  validateSchema(passengerSchema),
-  passengerController.create
-);
+passengersRouter
+  .post(
+    "/passengers",
+    validateSchema(passengerSchema),
+    passengerController.create
+  )
+  .get("/passengers/travels", passengerController.findTravels);
 
 export default passengersRouter;
