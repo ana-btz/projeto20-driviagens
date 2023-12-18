@@ -19,4 +19,34 @@ async function create(origin, destination, date) {
   await flightRepository.create(origin, destination, date);
 }
 
-export const flightService = { create };
+async function findAll(origin, destination, smallerDate, biggerDate) {
+  if ((biggerDate && !smallerDate) || (smallerDate && !biggerDate)) {
+    throw errors.badRequest("Both dates must be passed");
+  }
+
+  const smallerDateFormatted = dayjs(smallerDate, "DD-MM-YYYY").format(
+    "YYYY-MM-DD"
+  );
+  const biggerDateFormatted = dayjs(biggerDate, "DD-MM-YYYY").format(
+    "YYYY-MM-DD"
+  );
+  if (
+    biggerDate &&
+    smallerDate &&
+    smallerDateFormatted >= biggerDateFormatted
+  ) {
+    throw errors.invalidData(
+      "bigger-date needs to be greater than smaller-date"
+    );
+  }
+
+  const flights = await flightRepository.findAll(
+    origin,
+    destination,
+    smallerDateFormatted,
+    biggerDateFormatted
+  );
+  return flights;
+}
+
+export const flightService = { create, findAll };
