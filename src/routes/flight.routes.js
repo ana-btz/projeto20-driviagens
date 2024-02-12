@@ -5,9 +5,8 @@ import { validateSchema } from "../middlewares/validateSchema.middleware.js";
 
 const flightRouter = Router();
 
-flightRouter.post("/", validateSchema(flightSchema), flightController.create);
+flightRouter
+  .post("/", validateSchema(flightSchema), flightController.create)
+  .get("/", flightController.findAll);
 
 export { flightRouter };
-
-
-

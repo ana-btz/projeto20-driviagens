@@ -8,4 +8,27 @@ async function create(req, res) {
   res.sendStatus(httpStatus.CREATED);
 }
 
-export const flightController = { create };
+async function findAll(req, res) {
+  const {
+    origin,
+    destination,
+    ["smaller-date"]: smallerDate,
+    ["bigger-date"]: biggerDate,
+  } = req.query;
+
+  const flights = await flightService.findAll(
+    origin,
+    destination,
+    smallerDate,
+    biggerDate
+  );
+
+  const formattedFlights = flights.map((flight) => {
+    const date = dayjs(flight.date).format("DD-MM-YYYY");
+    return { ...flight, date };
+  });
+
+  res.send(formattedFlights);
+}
+
+export const flightController = { create, findAll };
